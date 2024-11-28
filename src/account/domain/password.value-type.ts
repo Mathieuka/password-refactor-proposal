@@ -2,6 +2,8 @@ import { UnsecurePassword } from "./unsecure-password.error";
 
 export class Password {
   private readonly stringPassword: string;
+  private cachedUpperCasedPasswordString: string[] | null = null;
+
 
 
   // I prefer not to perform the computation in the constructor.
@@ -29,10 +31,14 @@ export class Password {
     return this.stringPassword.length === 0;
   }
 
+  // Cache the result to avoid computing it multiple times
   private upperCasedPasswordString(): string[] {
-    return Array.from(
-        this.stringPassword.toUpperCase()
-    );
+    if (this.cachedUpperCasedPasswordString === null) {
+      this.cachedUpperCasedPasswordString = Array.from(
+          this.stringPassword.toUpperCase()
+      );
+    }
+    return this.cachedUpperCasedPasswordString;
   }
 
   private hasThriceTheSameCharacter(): boolean {
