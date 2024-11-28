@@ -4,11 +4,17 @@ export class Password {
   private readonly stringPassword: string;
   private cachedUpperCasedPasswordString: string[] | null = null;
 
-
-
-  // I prefer not to perform the computation in the constructor.
-  // While it may not be significant in this case, this value object could be used in multiple scenarios.
-  // We might not want to perform all computations systematically in every instance.
+  /*
+  DISCLAIMER: is an opinionated point.
+  I prefer not to perform computations in the constructor. Although this
+  might not seem significant in this particular case, this value object
+  could be used in various validation scenarios in the future. We might not
+  want to systematically perform all computations for every instance. What I
+  mean is that if we need to evolve the business rules for validation, it will
+  be simpler to handle this outside of the constructor, in a method. Otherwise,
+  we would be forced to either perform unnecessary calculations or manage special
+  cases to avoid them inside the constructor.
+  */
   constructor(stringPassword: string) {
     this.stringPassword = stringPassword;
   }
