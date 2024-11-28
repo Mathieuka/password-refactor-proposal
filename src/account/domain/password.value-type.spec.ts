@@ -12,7 +12,9 @@ describe("Password", () => {
   it.each(["AAzerty123", "Aazerty123", "AzerAtyA123", "AzeratyA123"])(
     "should throw for: %s",
     (stringPassword) => {
-      expect(() => new Password(stringPassword)).toThrowError(
+      const newPassword = new Password(stringPassword)
+
+      expect(() => newPassword.validate()).toThrowError(
         new UnsecurePassword()
       );
     }

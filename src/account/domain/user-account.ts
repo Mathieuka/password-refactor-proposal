@@ -9,11 +9,15 @@ export class UserAccount {
   }
 
   constructor(readonly email: string, password: string) {
+    const newPassword: Password = new Password(password)
+    newPassword.validate()
     this.id = "123";
-    this._password = new Password(password);
+    this._password = newPassword;
   }
 
   public changePassword(newPassword: string): void {
+    const newPasswords: Password = new Password(newPassword)
+    newPasswords.validate()
     this._password = new Password(newPassword);
   }
 }
