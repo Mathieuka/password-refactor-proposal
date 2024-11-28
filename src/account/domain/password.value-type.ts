@@ -2,22 +2,20 @@ import { UnsecurePassword } from "./unsecure-password.error";
 
 export class Password {
   private readonly stringPassword: string;
-  private readonly upperCasedPasswordString: string[];
 
+
+  // I prefer not to perform the computation in the constructor.
+  // While it may not be significant in this case, this value object could be used in multiple scenarios.
+  // We might not want to perform all computations systematically in every instance.
   constructor(stringPassword: string) {
-    this.stringPassword = stringPassword.trim();
-    this.upperCasedPasswordString = Array.from(
-      this.stringPassword.toUpperCase()
-    );
-
-    this.validate();
+    this.stringPassword = stringPassword;
   }
 
   toString(): string {
-    return this.stringPassword;
+    return this.stringPassword.trim();
   }
 
-  private validate(): asserts this is { toString(): string } {
+  validate(): asserts this is { toString(): string } {
     if (
       this.isEmpty() ||
       this.hasThriceTheSameCharacter() ||
@@ -31,16 +29,28 @@ export class Password {
     return this.stringPassword.length === 0;
   }
 
-  private hasThriceTheSameCharacter(): boolean {
-    return this.upperCasedPasswordString.some(
-      (char) =>
-        this.upperCasedPasswordString.filter((c) => c === char).length >= 3
+  private upperCasedPasswordString(): string[] {
+    return Array.from(
+        this.stringPassword.toUpperCase()
     );
   }
 
+  private hasThriceTheSameCharacter(): boolean {
+    const stringPasswordUpperCased = this.upperCasedPasswordString();
+
+    return stringPasswordUpperCased.some(
+      (char) =>
+          stringPasswordUpperCased.filter((c) => c === char).length >= 3
+    );
+  }
+
+  // Add isConsecutiveDuplicateCharacter to make it more explicit/readable
   private hasTwiceTheSameCharacterInARow(): boolean {
-    return this.upperCasedPasswordString
+    const stringPasswordUpperCased = this.upperCasedPasswordString()
+    const isConsecutiveDuplicateCharacter = (char: string, i: number) => char === stringPasswordUpperCased[i + 1];
+
+    return stringPasswordUpperCased
       .slice(0, -1)
-      .some((char, i) => char === this.upperCasedPasswordString[i + 1]);
+      .some(isConsecutiveDuplicateCharacter);
   }
 }
